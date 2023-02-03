@@ -7,9 +7,20 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 import {Base64} from "./libraries/Base64.sol";
 
+/**
+〇コントラクトを変更する場合の注意点
+- 再度コントラクトをデプロイする
+--　npx hardhat run scripts/deploy.js --network goerli
+- フロントエンド（App.js）のCONTRACT_ADDRESSを更新する
+-ABIファイルを更新する
+-- artifacts/contracts/GenerateNFT.sol/GenerateNFT.jsonの中身をfront/src/utils/Generate.jsonに貼り付ける
+
+ */
+
 contract GenerateNFT is ERC721URIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+    event NFTMinted(address sender, uint256 tokenId);
 
     constructor() ERC721("LoveLetterNFT", "LL") {
         console.log("This is my NFT contract.");
@@ -60,5 +71,9 @@ contract GenerateNFT is ERC721URIStorage {
             msg.sender
         );
         _tokenIds.increment();
+
+        emit NFTMinted(msg.sender, newItemId);
     }
 }
+
+
